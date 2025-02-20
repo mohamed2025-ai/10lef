@@ -1,0 +1,9 @@
+import pypdfium2 as pdfium
+
+# Load a document
+pdf = pdfium.PdfDocument("imgpdf/on1.pdf")
+# Loop over pages and render
+for i in range(len(pdf)):
+    page = pdf[i]
+    image = page.render(scale=4).to_pil()
+    image.save(f"output_{i:03d}.jpg")
