@@ -1,0 +1,29 @@
+import fitz
+from PIL import Image
+import io
+
+def pdf_to_webp(pdf_path, output_dir):
+    """
+    Décompose un fichier PDF en images WebP.
+
+    Args:
+        pdf_path (str): Chemin vers le fichier PDF.
+        output_dir (str): Répertoire de sortie pour les images WebP.
+    """
+
+    doc = fitz.open(pdf_path)  # Ouvre le fichier PDF
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)  # Charge la page
+        pix = page.get_pixmap()  # Obtient l'image de la page
+
+        # Convertit l'image en WebP et enregistre
+        img = Image.open(io.BytesIO(pix.tobytes()))
+        webp_path = f"{output_dir}/page_{page_num + 1}.webp"
+        img.save(webp_path, "webp")
+
+# Exemple d'utilisation
+pdf_file = "int1.pdf"  # Remplacez par le chemin de votre fichier PDF
+output_folder = "images_webp"  # Remplacez par le répertoire de sortie souhaité
+
+pdf_to_webp(pdf_file, output_folder)
+print(f"Le fichier PDF a été décomposé en images WebP dans le dossier '{output_folder}'.")
