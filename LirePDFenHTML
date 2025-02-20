@@ -1,0 +1,41 @@
+import PyPDF2
+from bs4 import BeautifulSoup
+
+def pdf_vers_html(chemin_pdf, chemin_html):
+    """
+    Lit le contenu d'un fichier PDF et le convertit en un fichier HTML.
+    """
+    try:
+        with open(chemin_pdf, 'rb') as fichier_pdf:
+            lecteur_pdf = PyPDF2.PdfReader(fichier_pdf)
+            nombre_pages = len(lecteur_pdf.pages)
+            
+            # Créer le contenu HTML
+            soup = BeautifulSoup("<html></html>", "html.parser")
+            corps = soup.new_tag("body")
+            soup.html.append(corps)
+
+            for i in range(nombre_pages):
+                page = lecteur_pdf.pages[i]
+                texte = page.extract_text()
+                
+                # Ajouter le texte de chaque page dans un paragraphe <p>
+                paragraphe = soup.new_tag("p")
+                paragraphe.string = texte
+                corps.append(paragraphe)
+
+            # Enregistrer le fichier HTML
+            with open(chemin_html, 'w', encoding='utf-8') as fichier_html:
+                fichier_html.write(str(soup))
+
+    except FileNotFoundError:
+        print(f"Erreur : Le fichier {chemin_pdf} n'a pas été trouvé.")
+    except Exception as e:
+        print(f"Erreur lors de la lecture ou de la conversion : {e}")
+
+# Chemins des fichiers
+chemin_pdf = "/home/mays/Images/int1.pdf"  # Remplacez par le chemin réel de votre fichier PDF
+chemin_html = "/home/mays/Images/int1.html"  # Chemin où le fichier HTML sera enregistré
+
+# Convertir le PDF en HTML
+pdf_vers_html(chemin_pdf, chemin_html)
