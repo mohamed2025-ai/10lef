@@ -1,0 +1,13 @@
+import json
+with open('musees-de-france-base-museofile.json') as json_file :
+ datas = json.load(json_file)
+
+nb = 0
+
+for data in datas:
+    if ('nom_officiel' in data['fields'] and 'domaine_thematique' in data['fields']):
+        print(data['fields']['nom_officiel'].ljust(80),data['fields']['domaine_thematique'])
+        nb += 1
+    if (nb > 10):
+        quit()
+
